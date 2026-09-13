@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Финансы</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  :root{
+    --bg:#0f1620; --card:#18212e; --card2:#1f2a3a; --stroke:#2a3648;
+    --text:#eef3f8; --dim:#94a3b8; --faint:#64748b;
+    --mint:#4fd1a5; --mint2:#7ae3c0; --sun:#ffc860; --coral:#ff7d6b; --sky:#7ab8ff;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{
+    margin:0;padding:0 0 100px;color:var(--text);
+    background:
+      radial-gradient(1000px 480px at 12% -8%, #1d3346 0%, transparent 62%),
+      radial-gradient(760px 380px at 96% 4%, #24304a 0%, transparent 58%),
+      var(--bg);
+    background-attachment:fixed;
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;
+    font-size:15px;line-height:1.45;
+  }
+  .wrap{padding:18px 14px 0;max-width:640px;margin:0 auto}
+  h2{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);
+     margin:26px 0 10px;font-weight:600}
+  .card{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:16px;margin-bottom:10px}
+
+  .hero{
+    background:linear-gradient(150deg,#1f3a3a 0%,#1c2c3f 48%,#1a2434 100%);
+    border:1px solid #2f4a4a;border-radius:22px;padding:22px 20px;
+    box-shadow:0 14px 34px -18px rgba(79,209,165,.55);position:relative;overflow:hidden
+  }
+  .hero:after{content:"";position:absolute;right:-60px;top:-70px;width:190px;height:190px;
+    border-radius:50%;background:radial-gradient(circle,rgba(79,209,165,.22),transparent 68%)}
+  .hero .kick{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mint);font-weight:700}
+  .hero .big{font-size:39px;font-weight:800;letter-spacing:-.025em;margin:6px 0 2px;
+             font-variant-numeric:tabular-nums;line-height:1.05}
+  .hero .sub{font-size:13.5px;color:#a7c4bd}
+  .bar{height:11px;border-radius:7px;background:rgba(0,0,0,.34);overflow:hidden;margin:18px 0 9px}
+  .bar>i{display:block;height:100%;border-radius:7px;
+         background:linear-gradient(90deg,var(--mint),var(--mint2) 70%,#a8f0d6);
+         box-shadow:0 0 16px rgba(79,209,165,.55);transition:width .6s cubic-bezier(.3,1,.4,1)}
+  .heroRow{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#a7c4bd}
+  .heroRow b{color:#fff;font-weight:700}
+  .pct{font-size:15px;font-weight:800;color:var(--mint)}
+  .cheer{margin-top:14px;padding-top:13px;border-top:1px solid rgba(255,255,255,.09);
+         font-size:13.5px;color:#c8ded8;line-height:1.5}
+  .steps{display:flex;gap:7px;margin-top:14px}
+  .step{flex:1;text-align:center;background:rgba(0,0,0,.22);border-radius:11px;padding:9px 4px}
+  .step .m{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:#8fb3ab}
+  .step .v{font-size:14px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
+  .step.now{background:rgba(79,209,165,.16);box-shadow:inset 0 0 0 1px rgba(79,209,165,.4)}
+
+  .next{border-left:3px solid var(--sun)}
+  .next .t{font-size:11.5px;color:var(--sun);font-weight:700;letter-spacing:.07em;text-transform:uppercase}
+  .next .n{font-size:25px;font-weight:800;margin:6px 0 2px;font-variant-numeric:tabular-nums}
+  .next .d{font-size:13px;color:var(--dim)}
+  .next .note{font-size:12.5px;color:var(--faint);margin-top:10px;padding-top:10px;
+              border-top:1px solid var(--stroke);line-height:1.45}
+
+  .loan{background:var(--card);border:1px solid var(--stroke);border-radius:15px;padding:14px;margin-bottom:8px}
+  .loan.done{opacity:.42}
+  .loan.off{background:transparent;border-style:dashed}
+  .loanTop{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  .loanName{font-weight:650;font-size:15px}
+  .loanName .tick{color:var(--mint);margin-right:5px}
+  .loanSum{font-size:18px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .loanMeta{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+  .chip{font-size:11.5px;padding:3px 9px;border-radius:999px;background:var(--card2);
+        color:var(--dim);border:1px solid var(--stroke)}
+  .chip.sep{color:var(--coral);border-color:#4d2f2c;background:#26191a}
+  .chip.nov{color:var(--sky);border-color:#26405e;background:#172231}
+  .chip.dec{color:var(--mint);border-color:#245043;background:#15271f}
+  .chip.warn{color:var(--sun);border-color:#4b4024;background:#241f14}
+  .loanNote{font-size:12.5px;color:var(--faint);margin-top:9px;line-height:1.45}
+  .lbar{height:5px;border-radius:4px;background:rgba(0,0,0,.35);margin-top:11px;overflow:hidden}
+  .lbar>i{display:block;height:100%;border-radius:4px}
+
+  .wk{display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .wk::-webkit-scrollbar{display:none}
+  .wk button{flex:0 0 auto;background:var(--card);border:1px solid var(--stroke);color:var(--dim);
+             font-size:12.5px;padding:8px 13px;border-radius:999px;font-family:inherit;cursor:pointer}
+  .wk button.on{background:linear-gradient(135deg,var(--mint),var(--mint2));border-color:transparent;
+                color:#0d1a16;font-weight:700}
+  .row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--stroke);font-size:14px}
+  .row:last-child{border-bottom:none}
+  .row .dt{font-size:12px;color:var(--faint);width:42px;flex:0 0 42px;font-variant-numeric:tabular-nums}
+  .row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .row .nm small{display:block;font-size:11px;color:var(--faint)}
+  .row .sm{font-weight:650;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .dotP{width:6px;height:6px;border-radius:50%;background:var(--mint);flex:0 0 6px}
+  .dotR{width:6px;height:6px;border-radius:50%;background:var(--sky);flex:0 0 6px}
+  .total{display:flex;justify-content:space-between;align-items:baseline;margin-top:12px;
+         padding-top:12px;border-top:1px solid var(--stroke)}
+  .total span{color:var(--dim);font-size:13px}
+  .total b{font-size:21px;font-variant-numeric:tabular-nums;color:var(--mint)}
+
+  .taxHead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px}
+  .taxBig{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums}
+  .taxDate{font-size:13px;color:var(--sun);font-weight:600}
+  .taxGap{font-size:13px;color:var(--dim);margin-top:9px}
+  .taxList{margin-top:14px;padding-top:12px;border-top:1px solid var(--stroke)}
+
+  .add{position:fixed;left:0;right:0;bottom:0;padding:12px 14px calc(12px + env(safe-area-inset-bottom));
+       background:linear-gradient(to top,var(--bg) 72%,transparent)}
+  .add button{width:100%;max-width:612px;margin:0 auto;display:block;
+              background:linear-gradient(135deg,var(--mint),var(--mint2));color:#0d1a16;
+              border:none;border-radius:15px;padding:16px;font-size:15px;font-weight:700;
+              font-family:inherit;cursor:pointer;box-shadow:0 10px 26px -12px rgba(79,209,165,.8)}
+  .form{margin-top:10px}
+  .form input{width:100%;background:var(--card2);border:1px solid var(--stroke);color:var(--text);
+              border-radius:12px;padding:13px;font-size:15px;font-family:inherit;margin-bottom:8px}
+  .form input::placeholder{color:var(--faint)}
+  .form .btns{display:flex;gap:8px}
+  .form .btns button{flex:1;border-radius:12px;padding:13px;font-size:14px;font-weight:700;
+                     font-family:inherit;border:none;cursor:pointer}
+  .form .save{background:var(--mint);color:#0d1a16}
+  .form .cancel{background:var(--card2);color:var(--dim);border:1px solid var(--stroke)}
+  .toggle{background:none;border:none;color:var(--sky);font-size:13px;font-family:inherit;padding:2px 0;cursor:pointer}
+
+  .rn{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--stroke)}
+  .rn:last-child{border-bottom:none}
+  .rn.did{opacity:.4}
+  .rn .box{width:23px;height:23px;flex:0 0 23px;border-radius:7px;border:1.5px solid var(--stroke);
+           background:var(--card2);cursor:pointer;display:flex;align-items:center;justify-content:center;
+           font-size:13px;color:#0d1a16;font-weight:800}
+  .rn .box.on{background:var(--mint);border-color:var(--mint)}
+  .rn .nm{flex:1;min-width:0}
+  .rn .nm b{font-weight:600;font-size:14.5px;display:block;overflow:hidden;
+            text-overflow:ellipsis;white-space:nowrap}
+  .rn .nm small{font-size:11.5px;color:var(--faint)}
+  .rn .sm{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:14.5px}
+  .rn.soon .nm small{color:var(--sun)}
+  .rn.over .nm small{color:var(--coral)}
+  .closeBtn{width:100%;margin-top:11px;background:var(--card2);border:1px solid var(--stroke);
+            color:var(--mint);border-radius:11px;padding:10px;font-size:13.5px;font-weight:700;
+            font-family:inherit;cursor:pointer}
+  .closeBtn.undo{color:var(--faint);font-weight:600}
+  .seg{display:flex;gap:6px;margin-bottom:10px}
+  .seg button{flex:1;background:var(--card);border:1px solid var(--stroke);color:var(--dim);
+              font-size:12.5px;padding:8px;border-radius:999px;font-family:inherit;cursor:pointer}
+  .seg button.on{background:linear-gradient(135deg,var(--mint),var(--mint2));border-color:transparent;
+                 color:#0d1a16;font-weight:700}
+  .hint{font-size:12px;color:var(--faint);text-align:center;margin-top:24px;padding-bottom:6px}
+  .err{text-align:center;padding:52px 24px;color:var(--dim)}
+  .err b{display:block;color:var(--text);font-size:17px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <div class="err"><b>Загружаю…</b>Секунду.</div>
+</div>
+
+<div class="add" id="addBar" style="display:none">
+  <button onclick="openForm()">+ Добавить приход</button>
+</div>
+
+<script id="seed" type="application/json">
+{
+  "meta": {
+    "обновлено": "2026-09-13",
+    "минимальный_резерв": 100000,
+    "ставка_налога": 0.06,
+    "на_счетах": 284000,
+    "неотработано_предоплат": 429100,
+    "жизнь_остаток_месяца": 173000,
+    "комментарий": "Замени 'на_счетах' и остатки кредитов на актуальные — остальное пересчитается само"
+  },
+  "долги": {
+    "база": 8009800,
+    "цель_обязательств": 1,
+    "цель_текст": "Осталась только ипотека"
+  },
+  "кредиты": [
+    {
+      "id": "biznes",
+      "название": "Бизнес-кредит",
+      "остаток": 314000,
+      "ставка": "2,9% в месяц",
+      "ставка_год": 34.8,
+      "платёж": 0,
+      "дата": "2026-10-02",
+      "дата_текст": "до 2 октября",
+      "статус": "закрыть первым",
+      "приоритет": "срочно",
+      "план_месяц": "сентябрь",
+      "закрыт": false,
+      "заметка": "Самый дорогой рубль в портфеле. Перевод по реквизитам: деньги уходят сначала в комиссию, потом в тело — переводи с запасом."
+    },
+    {
+      "id": "overdraft",
+      "название": "Овердрафт",
+      "остаток": 55000,
+      "ставка": "—",
+      "ставка_год": 0,
+      "платёж": 0,
+      "дата": null,
+      "дата_текст": "без срока",
+      "статус": "",
+      "приоритет": "срочно",
+      "план_месяц": "сентябрь",
+      "закрыт": false,
+      "заметка": "Лимит уже сокращён со 140 000. Закрытие убирает обязательство и освобождает лимит. Гасим в сентябре вместе с бизнес-кредитом."
+    },
+    {
+      "id": "kk_sber",
+      "название": "Кредитка Сбер",
+      "остаток": 90000,
+      "ставка": "—",
+      "ставка_год": 0,
+      "платёж": 0,
+      "дата": null,
+      "дата_текст": "минимальный платёж",
+      "статус": "",
+      "приоритет": "средний",
+      "план_месяц": "декабрь",
+      "закрыт": false,
+      "заметка": "Гасить целиком, а не размазывать по трём картам понемногу."
+    },
+    {
+      "id": "kk_raif",
+      "название": "Кредитка Райф",
+      "остаток": 20000,
+      "ставка": "—",
+      "ставка_год": 0,
+      "платёж": 0,
+      "дата": null,
+      "дата_текст": "минимальный платёж",
+      "статус": "",
+      "приоритет": "средний",
+      "план_месяц": "декабрь",
+      "закрыт": false,
+      "заметка": ""
+    },
+    {
+      "id": "kk_alfa",
+      "название": "Кредитка Альфа",
+      "остаток": 20000,
+      "ставка": "—",
+      "ставка_год": 0,
+      "платёж": 0,
+      "дата": null,
+      "дата_текст": "минимальный платёж",
+      "статус": "",
+      "приоритет": "средний",
+      "план_месяц": "декабрь",
+      "закрыт": false,
+      "заметка": ""
+    },
+    {
+      "id": "raif1",
+      "название": "Райф №1",
+      "остаток": 183000,
+      "ставка": "5,9%",
+      "ставка_год": 5.9,
+      "платёж": 13583,
+      "дата": "2026-09-20",
+      "дата_текст": "20 сентября",
+      "статус": "",
+      "приоритет": "средний",
+      "план_месяц": "ноябрь",
+      "закрыт": false,
+      "заметка": "Самые дешёвые деньги в портфеле — дешевле ипотеки. Закрывается ради минуса 13 583 ₽/мес, а не ради экономии процентов."
+    },
+    {
+      "id": "raif2",
+      "название": "Райф №2",
+      "остаток": 209000,
+      "ставка": "8,9%",
+      "ставка_год": 8.9,
+      "платёж": 11200,
+      "дата": "2026-09-20",
+      "дата_текст": "20 сентября",
+      "статус": "",
+      "приоритет": "средний",
+      "план_месяц": "декабрь",
+      "закрыт": false,
+      "заметка": "То же: гасится ради потока, а не ради ставки."
+    },
+    {
+      "id": "sber",
+      "название": "Сбер потребительский",
+      "остаток": 1112800,
+      "ставка": "13,85%",
+      "ставка_год": 13.85,
+      "платёж": 39300,
+      "дата": "2026-10-23",
+      "дата_текст": "23 октября",
+      "статус": "сентябрь перенесён",
+      "приоритет": "низкий",
+      "план_месяц": "",
+      "закрыт": false,
+      "заметка": "Сентябрьский платёж перенесён на 23 октября."
+    },
+    {
+      "id": "alfa",
+      "название": "Альфа",
+      "остаток": 1687000,
+      "ставка": "27,9%",
+      "ставка_год": 27.9,
+      "платёж": 59500,
+      "дата": "2026-12-29",
+      "дата_текст": "29 декабря",
+      "статус": "кредитные каникулы",
+      "приоритет": "низкий",
+      "план_месяц": "",
+      "закрыт": false,
+      "заметка": "Самый дорогой из крупных. После закрытия коротких обязательств именно он даёт максимальную экономию. Проверь, разрешено ли досрочное погашение на каникулах."
+    },
+    {
+      "id": "ipoteka",
+      "название": "Ипотека",
+      "остаток": 4065000,
+      "ставка": "11,4%",
+      "ставка_год": 11.4,
+      "платёж": 38200,
+      "дата": "2026-09-30",
+      "дата_текст": "30 сентября",
+      "статус": "",
+      "приоритет": "не трогать",
+      "план_месяц": "",
+      "закрыт": false,
+      "заметка": "Финальная цель — остаться только с ней."
+    },
+    {
+      "id": "nalog",
+      "название": "Аванс УСН за 9 месяцев",
+      "тип": "налог",
+      "остаток": 315000,
+      "ставка": "—",
+      "ставка_год": 0,
+      "платёж": 0,
+      "дата": "2026-10-28",
+      "дата_текст": "28 октября",
+      "статус": "",
+      "приоритет": "срочно",
+      "план_месяц": "октябрь",
+      "закрыт": false,
+      "заметка": "Срок установлен законом, перенести нельзя. Оценка держится на допущении, что 270 000 на 31 августа не уплачены."
+    }
+  ],
+  "прогноз_недели": [
+    {
+      "период": "13–19 сентября",
+      "с": "2026-09-13",
+      "по": "2026-09-19",
+      "текущая": true,
+      "поступления": [
+        {
+          "дата": "13.09",
+          "клиент": "Анна и Артём",
+          "тип": "разовая",
+          "сумма": 8000
+        },
+        {
+          "дата": "13.09",
+          "клиент": "Мария Попова",
+          "тип": "разовая",
+          "сумма": 6500
+        },
+        {
+          "дата": "15.09",
+          "клиент": "Мария Цыба",
+          "тип": "разовая",
+          "сумма": 13500
+        },
+        {
+          "дата": "16.09",
+          "клиент": "Анастасия",
+          "тип": "разовая",
+          "сумма": 8000
+        },
+        {
+          "дата": "16.09",
+          "клиент": "Марина Шнайдер",
+          "тип": "разовая",
+          "сумма": 8000
+        },
+        {
+          "дата": "17.09",
+          "клиент": "Анастасия Золотарева",
+          "тип": "разовая",
+          "сумма": 13500
+        },
+        {
+          "дата": "17.09",
+          "клиент": "Саша Дукарт",
+          "тип": "разовая",
+          "сумма": 8000
+        },
+        {
+          "дата": "18.09",
+          "клиент": "Валерия Газина",
+          "тип": "разовая",
+          "сумма": 13500
+        },
+        {
+          "дата": "19.09",
+          "клиент": "Мария Попова",
+          "тип": "разовая",
+          "сумма": 6500
+        },
+        {
+          "дата": "19.09",
+          "клиент": "Оля Древаль",
+          "тип": "разовая",
+          "сумма": 9000
+        }
+      ]
+    },
+    {
+      "период": "20–26 сентября",
+      "с": "2026-09-20",
+      "по": "2026-09-26",
+      "текущая": false,
+      "поступления": [
+        {
+          "дата": "22.09",
+          "клиент": "Юлия Винницкая",
+          "тип": "продление пакета",
+          "сумма": 24000
+        },
+        {
+          "дата": "22.09",
+          "клиент": "Марина Шнайдер",
+          "тип": "разовая",
+          "сумма": 8000
+        },
+        {
+          "дата": "24.09",
+          "клиент": "Алина Саматова",
+          "тип": "продление пакета",
+          "сумма": 20000
+        },
+        {
+          "дата": "24.09",
+          "клиент": "Анастасия М",
+          "тип": "продление пакета",
+          "сумма": 24000
+        },
+        {
+          "дата": "24.09",
+          "клиент": "Елизавета Матвейчук",
+          "тип": "разовая",
+          "сумма": 13500
+        },
+        {
+          "дата": "24.09",
+          "клиент": "Саша Дукарт",
+          "тип": "разовая",
+          "сумма": 8000
+        },
+        {
+          "дата": "25.09",
+          "клиент": "Ксения",
+          "тип": "продление пакета",
+          "сумма": 24000
+        },
+        {
+          "дата": "25.09",
+          "клиент": "Екатерина Палкина",
+          "тип": "разовая",
+          "сумма": 5000
+        },
+        {
+          "дата": "26.09",
+          "клиент": "Кристина",
+          "тип": "разовая",
+          "сумма": 7000
+        },
+        {
+          "дата": "26.09",
+          "клиент": "Мария Попова",
+          "тип": "разовая",
+          "сумма": 6500
+        }
+      ]
+    },
+    {
+      "период": "27 сентября – 3 октября",
+      "с": "2026-09-27",
+      "по": "2026-10-03",
+      "текущая": false,
+      "поступления": [
+        {
+          "дата": "27.09",
+          "клиент": "Юлия Фокина",
+          "тип": "продление пакета",
+          "сумма": 24000
+        },
+        {
+          "дата": "28.09",
+          "клиент": "Елизавета Матвейчук",
+          "тип": "разовая",
+          "сумма": 13500
+        },
+        {
+          "дата": "29.09",
+          "клиент": "А. Трофимчук",
+          "тип": "продление пакета",
+          "сумма": 20000
+        },
+        {
+          "дата": "29.09",
+          "клиент": "Ксения Колоскова",
+          "тип": "продление пакета",
+          "сумма": 35000
+        },
+        {
+          "дата": "29.09",
+          "клиент": "Алексей и Марина",
+          "тип": "разовая",
+          "сумма": 10000
+        },
+        {
+          "дата": "29.09",
+          "клиент": "Анна Nyuta",
+          "тип": "разовая",
+          "сумма": 8000
+        },
+        {
+          "дата": "29.09",
+          "клиент": "Марина Шнайдер",
+          "тип": "разовая",
+          "сумма": 8000
+        },
+        {
+          "дата": "30.09",
+          "клиент": "Вадим",
+          "тип": "продление пакета",
+          "сумма": 35000
+        },
+        {
+          "дата": "01.10",
+          "клиент": "Саша Дукарт",
+          "тип": "разовая",
+          "сумма": 8000
+        },
+        {
+          "дата": "03.10",
+          "клиент": "Мария Попова",
+          "тип": "разовая",
+          "сумма": 6500
+        }
+      ]
+    }
+  ],
+  "внеплановые_приходы": [
+    {
+      "дата": "2026-09-11",
+      "источник": "Новый клиент — пакет 5 сессий",
+      "сумма": 35000
+    },
+    {
+      "дата": "2026-09-09",
+      "источник": "Разбор случая, супервизия коллеге",
+      "сумма": 8000
+    },
+    {
+      "дата": "2026-09-05",
+      "источник": "Запись вебинара, продажа",
+      "сумма": 12000
+    }
+  ],
+  "налог": {
+    "накоплено_к_31_08": 270000,
+    "в_резерве_сейчас": 0,
+    "ближайший_платёж": {
+      "название": "Аванс УСН за 9 месяцев",
+      "дата": "2026-10-28",
+      "оценка": 315000
+    },
+    "следующие": [
+      {
+        "название": "Фиксированные взносы за 2026",
+        "дата": "2026-12-28",
+        "оценка": 57390
+      },
+      {
+        "название": "Годовой остаток УСН за 2026",
+        "дата": "2027-04-28",
+        "оценка": 131000
+      },
+      {
+        "название": "Взнос 1% с дохода свыше 300 000",
+        "дата": "2027-07-01",
+        "оценка": 97000
+      }
+    ],
+    "заметка": "Аванс за 9 месяцев платится целиком до 28 октября. Взносы 57 390 + 97 000 уменьшают налог по УСН для ИП без работников на всю сумму: годовой налог при 10 млн поступлений — около 446 000, а не 600 000."
+  },
+  "план_года": {
+    "база": 1472000,
+    "погашено_ранее": 266000,
+    "комментарий": "База = остаток по плану + уже погашенное: овердрафт 140 000→55 000, бизнес-кредит 495 000→314 000"
+  },
+  "продления": [
+    {
+      "клиент": "Юлия Винницкая",
+      "конец_пакета": "2026-09-21",
+      "окно_с": "2026-09-22",
+      "окно_по": "2026-09-28",
+      "сумма": 24000,
+      "осталось_сессий": 2,
+      "предложила": false
+    },
+    {
+      "клиент": "Алина Саматова",
+      "конец_пакета": "2026-09-23",
+      "окно_с": "2026-09-24",
+      "окно_по": "2026-09-30",
+      "сумма": 20000,
+      "осталось_сессий": 2,
+      "предложила": false
+    },
+    {
+      "клиент": "Анастасия М",
+      "конец_пакета": "2026-09-23",
+      "окно_с": "2026-09-24",
+      "окно_по": "2026-09-30",
+      "сумма": 24000,
+      "осталось_сессий": 2,
+      "предложила": false
+    },
+    {
+      "клиент": "Ксения",
+      "конец_пакета": "2026-09-24",
+      "окно_с": "2026-09-25",
+      "окно_по": "2026-10-01",
+      "сумма": 24000,
+      "осталось_сессий": 2,
+      "предложила": false
+    },
+    {
+      "клиент": "Юлия Фокина",
+      "конец_пакета": "2026-09-26",
+      "окно_с": "2026-09-27",
+      "окно_по": "2026-10-03",
+      "сумма": 24000,
+      "осталось_сессий": 3,
+      "предложила": false
+    },
+    {
+      "клиент": "Александра Трофимчук",
+      "конец_пакета": "2026-09-28",
+      "окно_с": "2026-09-29",
+      "окно_по": "2026-10-05",
+      "сумма": 20000,
+      "осталось_сессий": 3,
+      "предложила": false
+    },
+    {
+      "клиент": "Ксения Колоскова",
+      "конец_пакета": "2026-09-28",
+      "окно_с": "2026-09-29",
+      "окно_по": "2026-10-05",
+      "сумма": 35000,
+      "осталось_сессий": 3,
+      "предложила": false
+    },
+    {
+      "клиент": "Вадим",
+      "конец_пакета": "2026-09-29",
+      "окно_с": "2026-09-30",
+      "окно_по": "2026-10-06",
+      "сумма": 35000,
+      "осталось_сессий": 3,
+      "предложила": false
+    },
+    {
+      "клиент": "Карина",
+      "конец_пакета": "2026-10-01",
+      "окно_с": "2026-10-02",
+      "окно_по": "2026-10-08",
+      "сумма": 35000,
+      "осталось_сессий": 3,
+      "предложила": false
+    },
+    {
+      "клиент": "Марго",
+      "конец_пакета": "2026-10-01",
+      "окно_с": "2026-10-02",
+      "окно_по": "2026-10-08",
+      "сумма": 35000,
+      "осталось_сессий": 3,
+      "предложила": false
+    },
+    {
+      "клиент": "Анна Палкина",
+      "конец_пакета": "2026-10-03",
+      "окно_с": "2026-10-04",
+      "окно_по": "2026-10-10",
+      "сумма": 35000,
+      "осталось_сессий": 3,
+      "предложила": false
+    },
+    {
+      "клиент": "Матвей Боталов",
+      "конец_пакета": "2026-10-03",
+      "окно_с": "2026-10-04",
+      "окно_по": "2026-10-10",
+      "сумма": 24000,
+      "осталось_сессий": 2,
+      "предложила": false
+    },
+    {
+      "клиент": "Евгения Суховертюк",
+      "конец_пакета": "2026-10-06",
+      "окно_с": "2026-10-07",
+      "окно_по": "2026-10-13",
+      "сумма": 35000,
+      "осталось_сессий": 4,
+      "предложила": false
+    },
+    {
+      "клиент": "Дмитрий Ященко",
+      "конец_пакета": "2026-10-08",
+      "окно_с": "2026-10-09",
+      "окно_по": "2026-10-15",
+      "сумма": 20000,
+      "осталось_сессий": 4,
+      "предложила": false
+    },
+    {
+      "клиент": "Диана Блинду",
+      "конец_пакета": "2026-10-09",
+      "окно_с": "2026-10-10",
+      "окно_по": "2026-10-16",
+      "сумма": 31500,
+      "осталось_сессий": 3,
+      "предложила": false
+    },
+    {
+      "клиент": "Жанна Иванова",
+      "конец_пакета": "2026-10-09",
+      "окно_с": "2026-10-10",
+      "окно_по": "2026-10-16",
+      "сумма": 25200,
+      "осталось_сессий": 4,
+      "предложила": false
+    },
+    {
+      "клиент": "Павел Черепков",
+      "конец_пакета": "2026-10-10",
+      "окно_с": "2026-10-11",
+      "окно_по": "2026-10-17",
+      "сумма": 35000,
+      "осталось_сессий": 4,
+      "предложила": false
+    },
+    {
+      "клиент": "Наталья Ковалева",
+      "конец_пакета": "2026-10-10",
+      "окно_с": "2026-10-11",
+      "окно_по": "2026-10-17",
+      "сумма": 35000,
+      "осталось_сессий": 4,
+      "предложила": false
+    },
+    {
+      "клиент": "Светлана Клинова",
+      "конец_пакета": "2026-10-17",
+      "окно_с": "2026-10-18",
+      "окно_по": "2026-10-24",
+      "сумма": 20000,
+      "осталось_сессий": 3,
+      "предложила": false
+    },
+    {
+      "клиент": "Ольга Снитко",
+      "конец_пакета": "2026-10-24",
+      "окно_с": "2026-10-25",
+      "окно_по": "2026-10-31",
+      "сумма": 20000,
+      "осталось_сессий": 3,
+      "предложила": false
+    },
+    {
+      "клиент": "Варя",
+      "конец_пакета": "2026-10-25",
+      "окно_с": "2026-10-26",
+      "окно_по": "2026-11-01",
+      "сумма": 20000,
+      "осталось_сессий": 3,
+      "предложила": false
+    },
+    {
+      "клиент": "Мария Невская",
+      "конец_пакета": "2026-10-31",
+      "окно_с": "2026-11-01",
+      "окно_по": "2026-11-07",
+      "сумма": 25000,
+      "осталось_сессий": 4,
+      "предложила": false
+    }
+  ]
+}
+</script>
+<script>
+(function(){ try{ if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();} }catch(e){} })();
+
+var D=null, week=0, extra=[], formOpen=false, showRest=false;
+var S={closed:{},offered:{}}, renewTab=0;
+
+var CS=(function(){ try{ return Telegram.WebApp.CloudStorage||null; }catch(e){ return null; } })();
+function saveState(){
+  if(!CS) return;
+  try{ CS.setItem("state", JSON.stringify(S), function(){}); }catch(e){}
+}
+function loadState(cb){
+  if(!CS){ cb(); return; }
+  try{
+    CS.getItem("state", function(err,val){
+      if(!err&&val){ try{ var p=JSON.parse(val); S.closed=p.closed||{}; S.offered=p.offered||{}; }catch(e){} }
+      cb();
+    });
+  }catch(e){ cb(); }
+}
+var PLAN=["сентябрь","октябрь","ноябрь","декабрь"];
+
+function money(n){ return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g," ")+" \u20BD"; }
+function shortMoney(n){
+  if(n>=1000000) return (n/1000000).toFixed(2).replace(".",",")+" \u043C\u043B\u043D \u20BD";
+  return money(n);
+}
+function daysTo(iso){
+  if(!iso) return null;
+  var t=new Date(iso+"T00:00:00"), now=new Date(); now.setHours(0,0,0,0);
+  return Math.round((t-now)/86400000);
+}
+function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){
+  return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+function monthClass(m){ return m==="сентябрь"?"sep":m==="ноябрь"?"nov":m==="декабрь"?"dec":"warn"; }
+function plural(n,a,b,c){ var m=n%100; if(m>=11&&m<=14) return c; m=n%10;
+  return m===1?a:(m>=2&&m<=4)?b:c; }
+
+function boot(j){
+  D=j; extra=(j.внеплановые_приходы||[]).slice();
+  loadState(function(){
+    (D.кредиты||[]).forEach(function(x){ if(S.closed[x.id]) x.закрыт=true; });
+    (D.продления||[]).forEach(function(r){ if(S.offered[r.клиент+r.окно_с]) r.предложила=true; });
+    render();
+    document.getElementById("addBar").style.display="block";
+  });
+}
+function seed(){
+  try{ var s=JSON.parse(document.getElementById("seed").textContent);
+       return (s&&s.кредиты)?s:null; }catch(e){ return null; }
+}
+fetch("data.json?v="+Date.now(),{cache:"no-store"})
+  .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+  .then(boot)
+  .catch(function(){
+    var s=seed();
+    if(s){ boot(s); }
+    else { document.getElementById("app").innerHTML=
+      '<div class="err"><b>Данные не загрузились</b>Положи data.json рядом с index.html и обнови страницу.</div>'; }
+  });
+
+function render(){
+  var L=D.кредиты;
+  var inPlan=L.filter(function(x){ return x.план_месяц; });
+  var rest=L.filter(function(x){ return !x.план_месяц; });
+  var live=inPlan.filter(function(x){ return !x.закрыт; });
+  var closed=inPlan.filter(function(x){ return x.закрыт; });
+
+  var left=live.reduce(function(s,x){ return s+x.остаток; },0);
+  var taxLeft=live.filter(function(x){return x.тип==='налог';})
+                  .reduce(function(s,x){return s+x.остаток;},0);
+  var base=(D.план_года&&D.план_года.база)?D.план_года.база:left;
+  var paid=Math.max(0,base-left);
+  var pct=base?Math.min(100,paid/base*100):0;
+
+  var byMonth={}; PLAN.forEach(function(m){ byMonth[m]=0; });
+  live.forEach(function(x){ if(byMonth[x.план_месяц]!==undefined) byMonth[x.план_месяц]+=x.остаток; });
+  var nowMonth=PLAN[new Date().getMonth()-8]||"сентябрь";
+
+  var dated=L.filter(function(x){ return x.дата&&!x.закрыт; }).sort(function(a,b){ return a.дата<b.дата?-1:1; });
+  var nx=dated[0];
+
+  var h="";
+
+  h+='<div class="hero">'+
+       '<div class="kick">План на этот год</div>'+
+       '<div class="big">'+money(left)+'</div>'+
+       '<div class="sub">'+(taxLeft?('долги '+money(left-taxLeft)+' \u00B7 налог '+money(taxLeft)):'Осталось закрыть до конца декабря')+'</div>'+
+       '<div class="bar"><i style="width:'+pct.toFixed(1)+'%"></i></div>'+
+       '<div class="heroRow"><div>Уже погашено <b>'+money(paid)+'</b></div>'+
+         '<div class="pct">'+pct.toFixed(0)+'%</div></div><div class="steps">';
+  PLAN.forEach(function(m){
+    var v=byMonth[m];
+    h+='<div class="step'+(m===nowMonth?" now":"")+'"><div class="m">'+m.slice(0,3)+'</div>'+
+       '<div class="v">'+(v?Math.round(v/1000)+"\u043A":"\u2014")+'</div></div>';
+  });
+  h+='</div>';
+
+  var doneNames=closed.map(function(x){ return x.название; });
+  var nDebt=live.filter(function(x){return x.тип!=='налог';}).length;
+  var cheer = nDebt===0
+    ? "План года выполнен. Остались только ипотека, Сбер и Альфа."
+    : "Впереди "+nDebt+" "+plural(nDebt,"обязательство","обязательства","обязательств")+
+      ", и к Новому году не остаётся ни одного."+
+      (doneNames.length?" Уже позади: "+doneNames.join(", ")+".":"");
+  h+='<div class="cheer">'+esc(cheer)+'</div></div>';
+
+  if(nx){
+    var dd=daysTo(nx.дата);
+    var when=dd===0?"сегодня":dd===1?"завтра":dd<0?("просрочен на "+Math.abs(dd)+" дн."):("через "+dd+" дн.");
+    var amount=nx.платёж>0?nx.платёж:nx.остаток;
+    h+='<div class="card next"><div class="t">Ближайший платёж</div>'+
+         '<div class="n">'+money(amount)+'</div>'+
+         '<div class="d">'+esc(nx.название)+' \u00B7 '+esc(nx.дата_текст)+' \u00B7 '+when+'</div>'+
+         (nx.заметка?'<div class="note">'+esc(nx.заметка)+'</div>':'')+'</div>';
+  }
+
+  h+='<h2>Закрываем в этом году</h2>';
+  var maxSum=Math.max.apply(null,inPlan.map(function(x){ return x.остаток; }));
+  inPlan.slice().sort(function(a,b){
+      if(a.закрыт!==b.закрыт) return a.закрыт?1:-1;
+      return (PLAN.indexOf(a.план_месяц)-PLAN.indexOf(b.план_месяц))||(b.остаток-a.остаток);
+    }).forEach(function(x){
+    var mc=monthClass(x.план_месяц);
+    var col=mc==="sep"?"var(--coral)":mc==="nov"?"var(--sky)":"var(--mint)";
+    h+='<div class="loan'+(x.закрыт?" done":"")+'"><div class="loanTop">'+
+         '<div class="loanName">'+(x.закрыт?'<span class="tick">\u2713</span>':'')+esc(x.название)+'</div>'+
+         '<div class="loanSum">'+(x.закрыт?"закрыт":money(x.остаток))+'</div></div>'+
+       '<div class="loanMeta">'+
+         '<span class="chip '+mc+'">'+esc(x.план_месяц)+'</span>'+(x.тип==='налог'?'<span class="chip warn">налог</span>':'')+
+         (x.ставка&&x.ставка!=="\u2014"?'<span class="chip">'+esc(x.ставка)+'</span>':'')+
+         (x.платёж>0?'<span class="chip">'+money(x.платёж)+'/мес</span>':'')+
+         (x.дата_текст&&x.дата_текст!=="без срока"?'<span class="chip">'+esc(x.дата_текст)+'</span>':'')+
+       '</div>'+
+       (x.заметка?'<div class="loanNote">'+esc(x.заметка)+'</div>':'')+
+       '<div class="lbar"><i style="width:'+(x.остаток/maxSum*100).toFixed(1)+'%;background:'+col+'"></i></div>'+
+       '<button class="closeBtn'+(x.закрыт?" undo":"")+'" onclick="toggleClosed(\''+x.id+'\')">'+
+         (x.закрыт?"Вернуть в план":(x.тип==="налог"?"Отметить уплаченным":"Отметить закрытым"))+'</button></div>';
+  });
+
+  var restSum=rest.reduce(function(s,x){ return s+x.остаток; },0);
+  h+='<h2>Не в плане этого года</h2><div class="card" style="padding:14px 16px">'+
+       '<div class="loanTop"><div class="loanName" style="color:var(--dim);font-weight:500">'+
+       rest.length+' '+plural(rest.length,"обязательство","обязательства","обязательств")+'</div>'+
+       '<div class="loanSum" style="color:var(--dim)">'+shortMoney(restSum)+'</div></div>'+
+       '<button class="toggle" onclick="toggleRest()" style="margin-top:8px">'+
+       (showRest?"свернуть":"показать")+'</button></div>';
+  if(showRest){
+    rest.forEach(function(x){
+      h+='<div class="loan off"><div class="loanTop">'+
+           '<div class="loanName" style="color:var(--dim)">'+esc(x.название)+'</div>'+
+           '<div class="loanSum" style="color:var(--dim)">'+money(x.остаток)+'</div></div>'+
+         '<div class="loanMeta">'+
+           (x.ставка&&x.ставка!=="\u2014"?'<span class="chip">'+esc(x.ставка)+'</span>':'')+
+           (x.платёж>0?'<span class="chip">'+money(x.платёж)+'/мес</span>':'')+
+           (x.дата_текст?'<span class="chip">'+esc(x.дата_текст)+'</span>':'')+
+           (x.статус?'<span class="chip warn">'+esc(x.статус)+'</span>':'')+
+         '</div></div>';
+    });
+  }
+
+  /* ——— продления пакетов ——— */
+  var R=(D.продления||[]).slice().sort(function(a,b){ return a.окно_с<b.окно_с?-1:1; });
+  if(R.length){
+    var todo=R.filter(function(r){ return !r.предложила; });
+    var TABS=[{t:"Ближайшие",f:function(r){ var d=daysTo(r.окно_с); return !r.предложила&&d<=14; }},
+              {t:"Все",f:function(r){ return !r.предложила; }},
+              {t:"Готово",f:function(r){ return r.предложила; }}];
+    var listed=R.filter(TABS[renewTab].f);
+    var lsum=listed.reduce(function(s,r){ return s+r.сумма; },0);
+    var tsum=todo.reduce(function(s,r){ return s+r.сумма; },0);
+
+    h+='<h2>Продления пакетов</h2>';
+    h+='<div class="seg">';
+    TABS.forEach(function(t,i){
+      h+='<button class="'+(i===renewTab?"on":"")+'" onclick="setRenew('+i+')">'+t.t+'</button>';
+    });
+    h+='</div><div class="card">';
+    if(!listed.length){
+      h+='<div style="color:var(--faint);font-size:13.5px">Пусто.</div>';
+    } else {
+      listed.forEach(function(r){
+        var d=daysTo(r.окно_с);
+        var cls=r.предложила?"did":(d<0?"over":(d<=7?"soon":""));
+        var when = d<0 ? ("окно открылось "+Math.abs(d)+" дн. назад")
+                 : d===0 ? "окно открывается сегодня"
+                 : ("окно через "+d+" дн.");
+        var dd=r.окно_с.split("-");
+        h+='<div class="rn '+cls+'">'+
+             '<div class="box'+(r.предложила?" on":"")+'" onclick="toggleOffer(\''+
+               esc(r.клиент).replace(/'/g,"")+'\',\''+r.окно_с+'\')">'+(r.предложила?"\u2713":"")+'</div>'+
+             '<div class="nm"><b>'+esc(r.клиент)+'</b>'+
+               '<small>'+dd[2]+'.'+dd[1]+' \u00B7 '+when+' \u00B7 осталось '+r.осталось_сессий+' сес.</small></div>'+
+             '<div class="sm">'+money(r.сумма)+'</div>'+
+           '</div>';
+      });
+      h+='<div class="total"><span>'+(renewTab===2?"Уже предложено":"В этом списке")+'</span><b>'+money(lsum)+'</b></div>';
+      if(renewTab!==2&&todo.length)
+        h+='<div class="total" style="border-top:none;padding-top:4px;margin-top:2px">'+
+           '<span>Всего ждёт предложения</span>'+
+           '<b style="font-size:15px;color:var(--sky)">'+money(tsum)+'</b></div>';
+    }
+    h+='</div>';
+  }
+
+  h+='<h2>Прогноз поступлений</h2>';
+  var W=D.прогноз_недели;
+  h+='<div class="wk">';
+  W.forEach(function(w,i){ h+='<button class="'+(i===week?"on":"")+'" onclick="setWeek('+i+')">'+esc(w.период)+'</button>'; });
+  h+='</div><div class="card">';
+  var cur=W[week], sum=0;
+  cur.поступления.forEach(function(p){
+    sum+=p.сумма;
+    h+='<div class="row"><div class="dt">'+esc(p.дата)+'</div>'+
+         '<div class="'+(p.тип.indexOf("пакет")>=0?"dotP":"dotR")+'"></div>'+
+         '<div class="nm">'+esc(p.клиент)+'<small>'+esc(p.тип)+'</small></div>'+
+         '<div class="sm">'+money(p.сумма)+'</div></div>';
+  });
+  h+='<div class="total"><span>Ожидается за неделю</span><b>'+money(sum)+'</b></div>'+
+     '<div class="total" style="border-top:none;padding-top:4px;margin-top:2px">'+
+     '<span>В налоговый резерв</span>'+
+     '<b style="font-size:15px;color:var(--sun)">'+money(sum*D.meta.ставка_налога)+'</b></div></div>';
+
+  h+='<h2>Приходы вне плана</h2><div class="card">';
+  if(!extra.length){
+    h+='<div style="color:var(--faint);font-size:13.5px">Пока пусто. Новая запись клиента, продажа записи, что угодно \u2014 добавляй кнопкой внизу.</div>';
+  } else {
+    var esum=0;
+    extra.slice().sort(function(a,b){ return a.дата<b.дата?1:-1; }).forEach(function(p){
+      esum+=p.сумма; var d2=p.дата.split("-");
+      h+='<div class="row"><div class="dt">'+d2[2]+'.'+d2[1]+'</div>'+
+         '<div class="nm">'+esc(p.источник)+'</div>'+
+         '<div class="sm">'+money(p.сумма)+'</div></div>';
+    });
+    h+='<div class="total"><span>Всего вне плана</span><b>'+money(esum)+'</b></div>';
+  }
+  if(formOpen){
+    h+='<div class="form"><input id="fSrc" placeholder="Откуда \u2014 например, новый клиент, пакет">'+
+       '<input id="fSum" placeholder="Сумма, \u20BD" inputmode="numeric">'+
+       '<div class="btns"><button class="cancel" onclick="closeForm()">Отмена</button>'+
+       '<button class="save" onclick="saveExtra()">Добавить</button></div></div>';
+  }
+  h+='</div>';
+
+  var T=D.налог, tp=T.ближайший_платёж, gap=tp.оценка-(T.в_резерве_сейчас||0), td=daysTo(tp.дата);
+  h+='<h2>Налог</h2><div class="card">'+
+       '<div class="taxHead"><div class="taxBig">'+money(tp.оценка)+'</div>'+
+       '<div class="taxDate">'+(td>0?("через "+td+" дн."):"срок прошёл")+'</div></div>'+
+       '<div style="font-size:13px;color:var(--dim)">'+esc(tp.название)+' \u00B7 до 28 октября</div>'+
+       '<div class="taxGap">В резерве '+money(T.в_резерве_сейчас||0)+
+       ' \u00B7 не хватает <b style="color:var(--sun)">'+money(gap)+'</b>'+
+       (td>0?(' \u00B7 по '+money(gap/td)+' в день'):'')+'</div><div class="taxList">';
+  T.следующие.forEach(function(s){
+    var d3=s.дата.split("-");
+    h+='<div class="row"><div class="nm">'+esc(s.название)+
+       '<small>'+d3[2]+'.'+d3[1]+'.'+d3[0]+'</small></div>'+
+       '<div class="sm" style="color:var(--dim)">'+money(s.оценка)+'</div></div>';
+  });
+  h+='</div><div class="loanNote" style="margin-top:12px">'+esc(T.заметка)+'</div></div>';
+
+  h+='<div class="hint">Данные из data.json \u00B7 обновлено '+esc(D.meta.обновлено)+'</div>';
+  document.getElementById("app").innerHTML=h;
+}
+
+function setWeek(i){ week=i; render(); }
+function setRenew(i){ renewTab=i; render(); }
+function haptic(kind){
+  try{ if(window.Telegram&&Telegram.WebApp&&Telegram.WebApp.HapticFeedback){
+    if(kind==="ok") Telegram.WebApp.HapticFeedback.notificationOccurred("success");
+    else Telegram.WebApp.HapticFeedback.impactOccurred("light"); } }catch(e){}
+}
+function toggleClosed(id){
+  var x=null;
+  D.кредиты.forEach(function(k){ if(k.id===id) x=k; });
+  if(!x) return;
+  x.закрыт=!x.закрыт;
+  if(x.закрыт){ S.closed[id]=1; haptic("ok"); } else { delete S.closed[id]; haptic(); }
+  saveState(); render();
+}
+function toggleOffer(client,win){
+  var r=null;
+  (D.продления||[]).forEach(function(q){ if(q.клиент.replace(/'/g,"")===client&&q.окно_с===win) r=q; });
+  if(!r) return;
+  r.предложила=!r.предложила;
+  var k=r.клиент+r.окно_с;
+  if(r.предложила){ S.offered[k]=1; haptic("ok"); } else { delete S.offered[k]; haptic(); }
+  saveState(); render();
+}
+function toggleRest(){ showRest=!showRest; render(); }
+function openForm(){ formOpen=true; render();
+  setTimeout(function(){ var e=document.getElementById("fSrc");
+    if(e){ e.focus(); e.scrollIntoView({behavior:"smooth",block:"center"}); } },60); }
+function closeForm(){ formOpen=false; render(); }
+function saveExtra(){
+  var s=document.getElementById("fSrc").value.trim();
+  var n=parseInt(document.getElementById("fSum").value.replace(/\D/g,""),10);
+  if(!s||!n) return;
+  var t=new Date(), iso=t.getFullYear()+"-"+("0"+(t.getMonth()+1)).slice(-2)+"-"+("0"+t.getDate()).slice(-2);
+  extra.push({дата:iso,источник:s,сумма:n});
+  formOpen=false;
+  try{ if(window.Telegram&&Telegram.WebApp&&Telegram.WebApp.HapticFeedback)
+        Telegram.WebApp.HapticFeedback.notificationOccurred("success"); }catch(e){}
+  render();
+}
+</script>
+</body>
+</html>
