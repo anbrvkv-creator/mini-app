@@ -829,18 +829,26 @@
 (function(){ try{ if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();} }catch(e){} })();
 
 var D=null, week=0, extra=[], formOpen=false, showRest=false;
-var S={closed:{},offered:{},paid:{}}, renewTab=0;
+var S={closed:{},offered:{},paid:{},extra:null}, renewTab=0;
+var saveOk=null;
 
 var CS=(function(){ try{ return Telegram.WebApp.CloudStorage||null; }catch(e){ return null; } })();
 function saveState(){
-  if(!CS) return;
-  try{ CS.setItem("state", JSON.stringify(S), function(){}); }catch(e){}
+  S.extra=extra;
+  if(!CS){ saveOk=false; return; }
+  try{
+    CS.setItem("state", JSON.stringify(S), function(err){
+      var ok=!err;
+      if(saveOk!==ok){ saveOk=ok; render(); }
+    });
+  }catch(e){ saveOk=false; }
 }
 function loadState(cb){
   if(!CS){ cb(); return; }
   try{
     CS.getItem("state", function(err,val){
-      if(!err&&val){ try{ var p=JSON.parse(val); S.closed=p.closed||{}; S.offered=p.offered||{}; S.paid=p.paid||{}; }catch(e){} }
+      if(!err&&val){ try{ var p=JSON.parse(val); S.closed=p.closed||{}; S.offered=p.offered||{}; S.paid=p.paid||{};
+                           if(Array.isArray(p.extra)) S.extra=p.extra; }catch(e){} }
       cb();
     });
   }catch(e){ cb(); }
@@ -871,6 +879,8 @@ function boot(j){
     (D.прогноз_недели||[]).forEach(function(w,wi){
       w.поступления.forEach(function(p,pi){ if(S.paid["pay:"+wi+":"+pi]) p.оплачено=true; });
     });
+    if(Array.isArray(S.extra)) extra=S.extra.slice();
+    if(CS) saveOk=true;
     render();
     document.getElementById("addBar").style.display="block";
   });
@@ -1094,7 +1104,11 @@ function render(){
   });
   h+='</div><div class="loanNote" style="margin-top:12px">'+esc(T.заметка)+'</div></div>';
 
-  h+='<div class="hint">Данные из data.json \u00B7 обновлено '+esc(D.meta.обновлено)+'</div>';
+  var st = saveOk===true ? "сохранение в Telegram работает"
+         : saveOk===false ? "сохранение недоступно \u2014 открой приложение в Telegram"
+         : "проверяю сохранение\u2026";
+  h+='<div class="hint">Данные из data.json \u00B7 обновлено '+esc(D.meta.обновлено)+
+     '<br>'+st+'</div>';
   document.getElementById("app").innerHTML=h;
 }
 
@@ -1102,6 +1116,7 @@ function delExtra(i){
   if(i<0||i>=extra.length) return;
   extra.splice(i,1);
   haptic();
+  saveState();
   render();
 }
 function togglePaid(w,i){
@@ -1147,6 +1162,7 @@ function saveExtra(){
   var t=new Date(), iso=t.getFullYear()+"-"+("0"+(t.getMonth()+1)).slice(-2)+"-"+("0"+t.getDate()).slice(-2);
   extra.push({дата:iso,источник:s,сумма:n});
   formOpen=false;
+  saveState();
   try{ if(window.Telegram&&Telegram.WebApp&&Telegram.WebApp.HapticFeedback)
         Telegram.WebApp.HapticFeedback.notificationOccurred("success"); }catch(e){}
   render();
