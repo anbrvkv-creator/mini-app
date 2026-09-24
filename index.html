@@ -187,11 +187,11 @@
 <script id="seed" type="application/json">
 {
   "meta": {
-    "обновлено": "2026-09-21",
+    "обновлено": "2026-09-25",
     "минимальный_резерв": 100000,
     "ставка_налога": 0.06,
     "на_счетах": 284000,
-    "неотработано_предоплат": 361500,
+    "неотработано_предоплат": 347500,
     "жизнь_остаток_месяца": 173000,
     "комментарий": "Замени 'на_счетах' и остатки кредитов на актуальные — остальное пересчитается само"
   },
@@ -387,7 +387,7 @@
           "клиент": "Марина Шнайдер",
           "тип": "разовая",
           "сумма": 8000,
-          "оплачено": false
+          "оплачено": true
         },
         {
           "дата": "24.09",
@@ -444,7 +444,7 @@
           "клиент": "Елизавета Павлова",
           "тип": "разовая",
           "сумма": 9000,
-          "оплачено": false
+          "оплачено": true
         },
         {
           "дата": "28.09",
@@ -465,7 +465,7 @@
           "клиент": "Анна Nyuta",
           "тип": "разовая",
           "сумма": 8000,
-          "оплачено": false
+          "оплачено": true
         },
         {
           "дата": "29.09",
@@ -475,17 +475,17 @@
           "оплачено": false
         },
         {
-          "дата": "30.09",
-          "клиент": "Анастасия (Anastasia)",
-          "тип": "разовая",
-          "сумма": 8000,
+          "дата": "29.09",
+          "клиент": "Анастасия М",
+          "тип": "продление · счёт 27.09",
+          "сумма": 24000,
           "оплачено": false
         },
         {
           "дата": "30.09",
-          "клиент": "Анастасия М",
-          "тип": "продление · счёт 27.09",
-          "сумма": 24000,
+          "клиент": "Анастасия (Anastasia)",
+          "тип": "разовая",
+          "сумма": 8000,
           "оплачено": false
         },
         {
@@ -514,7 +514,7 @@
           "клиент": "Анастасия Стребкова",
           "тип": "разовая",
           "сумма": 13500,
-          "оплачено": false
+          "оплачено": true
         },
         {
           "дата": "03.10",
@@ -673,7 +673,7 @@
       "клиент": "Анастасия М",
       "конец_пакета": "2026-09-23",
       "окно_с": "2026-09-27",
-      "окно_по": "2026-09-30",
+      "окно_по": "2026-09-29",
       "сумма": 24000,
       "осталось_сессий": 0,
       "след_сессия_точно": true,
@@ -745,7 +745,7 @@
       "окно_с": "2026-10-04",
       "окно_по": "2026-10-08",
       "сумма": 35000,
-      "осталось_сессий": 2,
+      "осталось_сессий": 1,
       "след_сессия_точно": true,
       "предложила": false
     },
@@ -765,7 +765,7 @@
       "окно_с": "2026-10-04",
       "окно_по": "2026-10-08",
       "сумма": 35000,
-      "осталось_сессий": 2,
+      "осталось_сессий": 1,
       "след_сессия_точно": true,
       "предложила": false
     },
@@ -1079,7 +1079,7 @@
 (function(){ try{ if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();} }catch(e){} })();
 
 var D=null, week=0, extra=[], formOpen=false, showRest=false;
-var S={closed:{},offered:{},paid:{},bills:{},extra:null}, renewTab=0;
+var S={closed:{},offered:{},paid:{},bills:{},extra:null}, renewTab=0, showPaid=false;
 var saveOk=null;
 
 var CS=(function(){ try{ return Telegram.WebApp.CloudStorage||null; }catch(e){ return null; } })();
@@ -1338,7 +1338,7 @@ function render(){
            '<div class="sm">'+money(p.сумма)+'</div></div>';
       return;
     }
-    if(p.оплачено) got+=p.сумма; else wait+=p.сумма;
+    if(p.оплачено){ got+=p.сумма; if(!showPaid) return; } else wait+=p.сумма;
     h+='<div class="row'+(p.оплачено?" paid":"")+'">'+
          '<div class="dt">'+esc(p.дата)+'</div>'+
          '<div class="payBox'+(p.оплачено?" on":"")+'" onclick="togglePaid('+week+','+i+')">'+
@@ -1346,7 +1346,10 @@ function render(){
          '<div class="nm">'+esc(p.клиент)+'<small>'+esc(p.тип)+'</small></div>'+
          '<div class="sm">'+money(p.сумма)+'</div></div>';
   });
-  h+='<div class="total"><span>Уже получено</span>'+
+  var nPaid=cur.поступления.filter(function(p){ return p.оплачено; }).length;
+  h+='<div class="total"><span>Уже получено'+
+       (nPaid?' <button class="toggle" style="font-size:12px" onclick="togglePaidRows()">'+
+         (showPaid?"скрыть":"показать "+nPaid)+'</button>':'')+'</span>'+
        '<b style="font-size:17px;color:var(--faint)">'+money(got)+'</b></div>'+
      '<div class="total" style="border-top:none;padding-top:4px;margin-top:2px">'+
        '<span>Ещё ожидается</span><b>'+money(wait)+'</b></div>'+
@@ -1427,6 +1430,7 @@ function payBill(id){
   if(b.оплачен){ S.bills[id]=1; haptic("ok"); } else { delete S.bills[id]; haptic(); }
   saveState(); render();
 }
+function togglePaidRows(){ showPaid=!showPaid; render(); }
 function setWeek(i){ week=i; render(); }
 function setRenew(i){ renewTab=i; render(); }
 function haptic(kind){
