@@ -423,6 +423,13 @@
           "тип": "разовая",
           "сумма": 13500,
           "оплачено": true
+        },
+        {
+          "дата": "27.09",
+          "клиент": "Оля Древаль",
+          "тип": "разовая",
+          "сумма": 9000,
+          "оплачено": false
         }
       ]
     },
@@ -1287,7 +1294,7 @@ function render(){
   var R=(D.продления||[]).slice().sort(function(a,b){ return a.окно_с<b.окно_с?-1:1; });
   if(R.length){
     var todo=R.filter(function(r){ return !r.предложила; });
-    var TABS=[{t:"Ближайшие",f:function(r){ var d=daysTo(r.окно_с); return !r.предложила&&d<=10; }},
+    var TABS=[{t:"Ближайшие",f:function(r){ var d=daysTo(r.окно_с); return !r.предложила&&d<=7; }},
               {t:"Все",f:function(r){ return !r.предложила; }},
               {t:"Готово",f:function(r){ return r.предложила; }}];
     var listed=R.filter(TABS[renewTab].f);
