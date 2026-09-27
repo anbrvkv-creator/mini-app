@@ -1192,7 +1192,8 @@ function render(){
   var R=(D.продления||[]).slice().sort(function(a,b){ return a.окно_с<b.окно_с?-1:1; });
   if(R.length){
     var todo=R.filter(function(r){ return !r.предложила; });
-    var TABS=[{t:"Ближайшие",f:function(r){ var d=daysTo(r.окно_с); return !r.предложила&&d<=7; }},
+    var horizon=(D.прогноз_недели&&D.прогноз_недели[0])?D.прогноз_недели[0].по:null;
+    var TABS=[{t:"Ближайшие",f:function(r){ return !r.предложила && (!horizon || r.окно_по<=horizon); }},
               {t:"Все",f:function(r){ return !r.предложила; }},
               {t:"Готово",f:function(r){ return r.предложила; }}];
     var listed=R.filter(TABS[renewTab].f);
