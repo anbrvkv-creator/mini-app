@@ -370,11 +370,25 @@
   ],
   "прогноз_недели": [
     {
-      "период": "28 сентября – 4 октября",
-      "с": "2026-09-28",
+      "период": "27 сентября – 4 октября",
+      "с": "2026-09-27",
       "по": "2026-10-04",
       "текущая": true,
       "поступления": [
+        {
+          "дата": "27.09",
+          "клиент": "Елизавета Павлова",
+          "тип": "разовая",
+          "сумма": 9000,
+          "оплачено": true
+        },
+        {
+          "дата": "27.09",
+          "клиент": "Ксения Фоминич",
+          "тип": "разовая",
+          "сумма": 13500,
+          "оплачено": true
+        },
         {
           "дата": "29.09",
           "клиент": "Алексей и Марина",
@@ -1274,9 +1288,11 @@ function render(){
      (skipped?'<div class="total" style="border-top:none;padding-top:4px;margin-top:2px">'+
        '<span>Не будет (пропуски)</span>'+
        '<b style="font-size:15px;color:var(--coral)">\u2212'+money(skipped)+'</b></div>':'')+
-     (renewWeek?'<div class="total" style="border-top:none;padding-top:8px;margin-top:2px">'+
-       '<span style="color:var(--faint)">Плюс продления \u2014 в блоке выше</span>'+
-       '<b style="font-size:15px;color:var(--faint)">+'+money(renewWeek)+'</b></div>':'')+
+     '<div class="total" style="padding-top:10px;margin-top:8px">'+
+       '<span style="color:var(--text);font-weight:600">Итого прогноз на неделю</span>'+
+       '<b style="font-size:22px">'+money(wait+renewWeek)+'</b></div>'+
+     '<div style="font-size:12px;color:var(--faint);margin-top:4px;text-align:right">'+
+       'разовые '+money(wait)+' + продления '+money(renewWeek)+'</div>'+
      '</div>';
 
   h+='<h2>Приходы вне плана</h2><div class="card">';
