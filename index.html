@@ -28,6 +28,10 @@
   .wrap{padding:18px 14px 0;max-width:640px;margin:0 auto}
   h2{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);
      margin:26px 0 10px;font-weight:600}
+  .h2row{display:flex;align-items:baseline;justify-content:space-between;margin:26px 0 10px}
+  .h2row h2{margin:0}
+  .h2row button{background:none;border:none;color:var(--sky);font-size:12px;font-family:inherit;
+                cursor:pointer;padding:0;letter-spacing:.02em}
   .card{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:16px;margin-bottom:10px}
 
   .hero{
@@ -133,8 +137,26 @@
   .form .cancel{background:var(--card2);color:var(--dim);border:1px solid var(--stroke)}
   .toggle{background:none;border:none;color:var(--sky);font-size:13px;font-family:inherit;padding:2px 0;cursor:pointer}
 
-  .rn{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--stroke)}
-  .rn:last-child{border-bottom:none}
+  .rnItem{border-bottom:1px solid var(--stroke)}
+  .rnItem:last-child{border-bottom:none}
+  .rn{display:flex;align-items:center;gap:11px;padding:11px 0}
+  .noteBtn{width:26px;height:26px;flex:0 0 26px;border:none;background:var(--card2);color:var(--faint);
+           border-radius:8px;font-size:13px;line-height:1;font-family:inherit;cursor:pointer;
+           display:flex;align-items:center;justify-content:center}
+  .noteBtn.has{background:rgba(122,184,255,.14);color:var(--sky)}
+  .rnNote{font-size:12.5px;color:var(--sky);line-height:1.45;padding:0 0 10px 34px;
+          margin-top:-4px;cursor:pointer;white-space:pre-wrap;word-break:break-word}
+  .noteEd{padding:2px 0 11px 34px}
+  .noteEd textarea{width:100%;background:var(--card2);border:1px solid var(--stroke);color:var(--text);
+                   border-radius:11px;padding:10px;font-size:14px;font-family:inherit;resize:vertical;
+                   min-height:62px;margin-bottom:7px}
+  .noteEd textarea::placeholder{color:var(--faint)}
+  .noteEd .btns{display:flex;gap:7px}
+  .noteEd .btns button{flex:1;border-radius:10px;padding:9px;font-size:13px;font-weight:700;
+                       font-family:inherit;border:none;cursor:pointer}
+  .noteEd .save{background:var(--mint);color:#0d1a16}
+  .noteEd .cancel{background:var(--card2);color:var(--dim);border:1px solid var(--stroke)}
+  .noteEd .del{flex:0 0 46px;background:var(--card2);color:var(--coral);border:1px solid var(--stroke)}
   .rn.did{opacity:.4}
   .rn .box{width:23px;height:23px;flex:0 0 23px;border-radius:7px;border:1.5px solid var(--stroke);
            background:var(--card2);cursor:pointer;display:flex;align-items:center;justify-content:center;
@@ -187,11 +209,11 @@
 <script id="seed" type="application/json">
 {
   "meta": {
-    "обновлено": "2026-10-06",
+    "обновлено": "2026-10-07",
     "минимальный_резерв": 100000,
     "ставка_налога": 0.06,
     "на_счетах": 284000,
-    "неотработано_предоплат": 463100,
+    "неотработано_предоплат": 484100,
     "жизнь_остаток_месяца": 173000,
     "комментарий": "Замени 'на_счетах' и остатки кредитов на актуальные — остальное пересчитается само"
   },
@@ -411,20 +433,6 @@
           "оплачено": false
         },
         {
-          "дата": "09.10",
-          "клиент": "Екатерина Палкина",
-          "тип": "разовая",
-          "сумма": 6500,
-          "оплачено": false
-        },
-        {
-          "дата": "10.10",
-          "клиент": "Мария Попова",
-          "тип": "разовая",
-          "сумма": 6500,
-          "оплачено": false
-        },
-        {
           "дата": "11.10",
           "клиент": "Лев Зайцев",
           "тип": "разовая",
@@ -475,13 +483,6 @@
           "оплачено": false
         },
         {
-          "дата": "15.10",
-          "клиент": "Екатерина Палкина",
-          "тип": "разовая",
-          "сумма": 6500,
-          "оплачено": false
-        },
-        {
           "дата": "16.10",
           "клиент": "Александр Забалуев",
           "тип": "разовая",
@@ -519,9 +520,23 @@
         },
         {
           "дата": "20.10",
+          "клиент": "Евгения Суховертюк — разовые",
+          "тип": "разовая",
+          "сумма": 8000,
+          "оплачено": false
+        },
+        {
+          "дата": "20.10",
           "клиент": "Марина Шнайдер",
           "тип": "разовая",
           "сумма": 8000,
+          "оплачено": false
+        },
+        {
+          "дата": "24.10",
+          "клиент": "Алексей и Марина",
+          "тип": "разовая",
+          "сумма": 10000,
           "оплачено": false
         },
         {
@@ -576,112 +591,12 @@
   },
   "продления": [
     {
-      "клиент": "Алина Саматова",
-      "конец_пакета": "2026-09-23",
-      "окно_с": "2026-09-27",
-      "окно_по": "2026-09-30",
-      "сумма": 20000,
-      "осталось_сессий": 0,
-      "след_сессия_точно": true,
-      "предложила": false
-    },
-    {
-      "клиент": "Юлия Фокина",
-      "конец_пакета": "2026-09-26",
-      "окно_с": "2026-09-27",
-      "окно_по": "2026-10-03",
-      "сумма": 24000,
-      "осталось_сессий": 0,
-      "след_сессия_точно": true,
-      "предложила": false
-    },
-    {
-      "клиент": "Ксения",
-      "конец_пакета": "2026-09-26",
-      "окно_с": "2026-09-27",
-      "окно_по": "2026-10-04",
-      "сумма": 24000,
-      "осталось_сессий": 0,
-      "след_сессия_точно": true,
-      "предложила": false
-    },
-    {
-      "клиент": "Анастасия М",
-      "конец_пакета": "2026-09-23",
-      "окно_с": "2026-09-27",
-      "окно_по": "2026-09-29",
-      "сумма": 24000,
-      "осталось_сессий": 0,
-      "след_сессия_точно": true,
-      "предложила": false
-    },
-    {
-      "клиент": "Юлия Винницкая",
-      "конец_пакета": "2026-09-21",
-      "окно_с": "2026-09-27",
-      "окно_по": "2026-09-28",
-      "сумма": 24000,
-      "осталось_сессий": 0,
-      "след_сессия_точно": true,
-      "предложила": false
-    },
-    {
-      "клиент": "Карина",
-      "конец_пакета": "2026-10-02",
-      "окно_с": "2026-10-04",
-      "окно_по": "2026-10-09",
-      "сумма": 35000,
-      "осталось_сессий": 0,
-      "след_сессия_точно": true,
-      "предложила": false
-    },
-    {
-      "клиент": "Диана Блинду",
-      "конец_пакета": "2026-10-04",
-      "окно_с": "2026-10-04",
-      "окно_по": "2026-10-11",
-      "сумма": 31500,
-      "осталось_сессий": 1,
-      "след_сессия_точно": false,
-      "предложила": false
-    },
-    {
-      "клиент": "Вадим",
-      "конец_пакета": "2026-09-29",
-      "окно_с": "2026-10-04",
-      "окно_по": "2026-10-06",
-      "сумма": 35000,
-      "осталось_сессий": 0,
-      "след_сессия_точно": true,
-      "предложила": false
-    },
-    {
-      "клиент": "Александра Трофимчук",
-      "конец_пакета": "2026-09-28",
-      "окно_с": "2026-10-04",
-      "окно_по": "2026-10-05",
-      "сумма": 20000,
-      "осталось_сессий": 0,
-      "след_сессия_точно": true,
-      "предложила": false
-    },
-    {
       "клиент": "Дмитрий Ященко",
       "конец_пакета": "2026-10-08",
       "окно_с": "2026-10-11",
       "окно_по": "2026-10-15",
       "сумма": 20000,
       "осталось_сессий": 1,
-      "след_сессия_точно": true,
-      "предложила": false
-    },
-    {
-      "клиент": "Матвей Боталов",
-      "конец_пакета": "2026-10-06",
-      "окно_с": "2026-10-11",
-      "окно_по": "2026-10-17",
-      "сумма": 24000,
-      "осталось_сессий": 0,
       "след_сессия_точно": true,
       "предложила": false
     },
@@ -706,47 +621,7 @@
       "предложила": false
     },
     {
-      "клиент": "Ксения Колоскова",
-      "конец_пакета": "2026-10-07",
-      "окно_с": "2026-10-11",
-      "окно_по": "2026-10-12",
-      "сумма": 35000,
-      "осталось_сессий": 1,
-      "след_сессия_точно": true,
-      "предложила": false
-    },
-    {
-      "клиент": "Евгения Суховертюк",
-      "конец_пакета": "2026-10-07",
-      "окно_с": "2026-10-11",
-      "окно_по": "2026-10-13",
-      "сумма": 35000,
-      "осталось_сессий": 1,
-      "след_сессия_точно": true,
-      "предложила": false
-    },
-    {
-      "клиент": "Марго",
-      "конец_пакета": "2026-10-08",
-      "окно_с": "2026-10-11",
-      "окно_по": "2026-10-17",
-      "сумма": 35000,
-      "осталось_сессий": 1,
-      "след_сессия_точно": true,
-      "предложила": false
-    },
-    {
-      "клиент": "Наталья Ковалева",
-      "конец_пакета": "2026-10-17",
-      "окно_с": "2026-10-18",
-      "окно_по": "2026-10-25",
-      "сумма": 35000,
-      "осталось_сессий": 2,
-      "след_сессия_точно": true,
-      "предложила": false
-    },
-    {
-      "клиент": "Ксения Фоминич — пакет",
+      "клиент": "Ксения Фоминич",
       "конец_пакета": "2026-10-18",
       "окно_с": "2026-10-18",
       "окно_по": "2026-10-25",
@@ -756,33 +631,43 @@
       "предложила": false
     },
     {
-      "клиент": "Юлия Фокина — новый пакет",
-      "конец_пакета": "2026-10-24",
-      "окно_с": "2026-10-25",
-      "окно_по": "2026-10-31",
-      "сумма": 24000,
-      "осталось_сессий": 3,
-      "след_сессия_точно": true,
-      "предложила": false
-    },
-    {
-      "клиент": "Анастасия М — новый пакет",
-      "конец_пакета": "2026-10-20",
-      "окно_с": "2026-10-25",
-      "окно_по": "2026-10-27",
-      "сумма": 24000,
-      "осталось_сессий": 2,
-      "след_сессия_точно": true,
-      "предложила": false
-    },
-    {
-      "клиент": "Валерия Газина — пакет",
+      "клиент": "Валерия Газина",
       "конец_пакета": "2026-10-20",
       "окно_с": "2026-10-25",
       "окно_по": "2026-10-28",
       "сумма": 30000,
       "осталось_сессий": 2,
       "след_сессия_точно": false,
+      "предложила": false
+    },
+    {
+      "клиент": "Светлана Клинова",
+      "конец_пакета": "2026-10-17",
+      "окно_с": "2026-10-25",
+      "окно_по": "2026-10-31",
+      "сумма": 20000,
+      "осталось_сессий": 1,
+      "след_сессия_точно": true,
+      "предложила": false
+    },
+    {
+      "клиент": "Ксения",
+      "конец_пакета": "2026-10-22",
+      "окно_с": "2026-10-25",
+      "окно_по": "2026-10-29",
+      "сумма": 24000,
+      "осталось_сессий": 3,
+      "след_сессия_точно": true,
+      "предложила": false
+    },
+    {
+      "клиент": "Ксения Колоскова",
+      "конец_пакета": "2026-10-21",
+      "окно_с": "2026-10-25",
+      "окно_по": "2026-10-28",
+      "сумма": 35000,
+      "осталось_сессий": 2,
+      "след_сессия_точно": true,
       "предложила": false
     },
     {
@@ -796,22 +681,22 @@
       "предложила": false
     },
     {
-      "клиент": "Ксения — новый пакет",
-      "конец_пакета": "2026-10-22",
+      "клиент": "Юлия Фокина",
+      "конец_пакета": "2026-10-24",
       "окно_с": "2026-10-25",
-      "окно_по": "2026-10-29",
+      "окно_по": "2026-10-31",
       "сумма": 24000,
       "осталось_сессий": 3,
       "след_сессия_точно": true,
       "предложила": false
     },
     {
-      "клиент": "Светлана Клинова",
-      "конец_пакета": "2026-10-17",
+      "клиент": "Анастасия М",
+      "конец_пакета": "2026-10-20",
       "окно_с": "2026-10-25",
-      "окно_по": "2026-10-31",
-      "сумма": 20000,
-      "осталось_сессий": 1,
+      "окно_по": "2026-10-27",
+      "сумма": 24000,
+      "осталось_сессий": 2,
       "след_сессия_точно": true,
       "предложила": false
     },
@@ -826,27 +711,7 @@
       "предложила": false
     },
     {
-      "клиент": "Карина — новый пакет",
-      "конец_пакета": "2026-11-05",
-      "окно_с": "2026-11-08",
-      "окно_по": "2026-11-12",
-      "сумма": 35000,
-      "осталось_сессий": 5,
-      "след_сессия_точно": false,
-      "предложила": false
-    },
-    {
-      "клиент": "Юлия Винницкая — новый пакет",
-      "конец_пакета": "2026-11-02",
-      "окно_с": "2026-11-08",
-      "окно_по": "2026-11-09",
-      "сумма": 24000,
-      "осталось_сессий": 4,
-      "след_сессия_точно": true,
-      "предложила": false
-    },
-    {
-      "клиент": "Александра Трофимчук — новый пакет",
+      "клиент": "Александра Трофимчук",
       "конец_пакета": "2026-11-02",
       "окно_с": "2026-11-08",
       "окно_по": "2026-11-09",
@@ -856,7 +721,37 @@
       "предложила": false
     },
     {
-      "клиент": "Вадим — новый пакет",
+      "клиент": "Наталья Ковалева",
+      "конец_пакета": "2026-11-02",
+      "окно_с": "2026-11-08",
+      "окно_по": "2026-11-10",
+      "сумма": 35000,
+      "осталось_сессий": 4,
+      "след_сессия_точно": true,
+      "предложила": false
+    },
+    {
+      "клиент": "Карина",
+      "конец_пакета": "2026-11-05",
+      "окно_с": "2026-11-08",
+      "окно_по": "2026-11-12",
+      "сумма": 35000,
+      "осталось_сессий": 5,
+      "след_сессия_точно": false,
+      "предложила": false
+    },
+    {
+      "клиент": "Юлия Винницкая",
+      "конец_пакета": "2026-11-02",
+      "окно_с": "2026-11-08",
+      "окно_по": "2026-11-09",
+      "сумма": 24000,
+      "осталось_сессий": 4,
+      "след_сессия_точно": true,
+      "предложила": false
+    },
+    {
+      "клиент": "Вадим",
       "конец_пакета": "2026-11-03",
       "окно_с": "2026-11-08",
       "окно_по": "2026-11-10",
@@ -871,7 +766,7 @@
       "окно_с": "2026-11-15",
       "окно_по": "2026-11-21",
       "сумма": 25000,
-      "осталось_сессий": 3,
+      "осталось_сессий": 2,
       "след_сессия_точно": false,
       "предложила": false
     },
@@ -886,7 +781,7 @@
       "предложила": false
     },
     {
-      "клиент": "Анна Ро — новый пакет",
+      "клиент": "Анна Ро",
       "конец_пакета": "2026-11-27",
       "окно_с": "2026-11-29",
       "окно_по": "2026-12-04",
@@ -1075,12 +970,12 @@
 (function(){ try{ if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();} }catch(e){} })();
 
 var D=null, week=0, extra=[], formOpen=false, showRest=false;
-var S={closed:{},offered:{},paid:{},bills:{},extra:null}, renewTab=0, showPaid=false;
+var S={closed:{},offered:{},paid:{},bills:{},notes:{},extra:null}, renewTab=0, showPaid=false, noteEdit=null, showExtra=true;
 var saveOk=null;
 
 var CS=(function(){ try{ return Telegram.WebApp.CloudStorage||null; }catch(e){ return null; } })();
 function saveState(){
-  S.extra=extra;
+  S.extra=extra; S.showExtra=showExtra;
   if(!CS){ saveOk=false; return; }
   try{
     CS.setItem("state", JSON.stringify(S), function(err){
@@ -1093,7 +988,7 @@ function loadState(cb){
   if(!CS){ cb(); return; }
   try{
     CS.getItem("state", function(err,val){
-      if(!err&&val){ try{ var p=JSON.parse(val); S.closed=p.closed||{}; S.offered=p.offered||{}; S.paid=p.paid||{}; S.bills=p.bills||{};
+      if(!err&&val){ try{ var p=JSON.parse(val); S.closed=p.closed||{}; S.offered=p.offered||{}; S.paid=p.paid||{}; S.bills=p.bills||{}; S.notes=p.notes||{}; if(typeof p.showExtra==='boolean') showExtra=p.showExtra;
                            if(Array.isArray(p.extra)) S.extra=p.extra; }catch(e){} }
       cb();
     });
@@ -1301,14 +1196,30 @@ function render(){
                  : d===1 ? "счёт завтра"
                  : ("счёт через "+d+" дн.");
         var dd=r.окно_с.split("-"), ns=r.окно_по.split("-");
-        h+='<div class="rn '+cls+'">'+
+        var nk=noteKey(r), nv=S.notes[nk]||"";
+        h+='<div class="rnItem"><div class="rn '+cls+'">'+
              '<div class="box'+(r.предложила?" on":"")+'" onclick="toggleOffer(\''+
                esc(r.клиент).replace(/'/g,"")+'\',\''+r.окно_с+'\')">'+(r.предложила?"\u2713":"")+'</div>'+
              '<div class="nm"><b>'+esc(r.клиент)+'</b>'+
                '<small>счёт '+dd[2]+'.'+dd[1]+' \u00B7 '+when+' \u00B7 сессия '+ns[2]+'.'+ns[1]+
                (r.след_сессия_точно===false?' (примерно)':'')+'</small></div>'+
              '<div class="sm">'+money(r.сумма)+'</div>'+
+             '<button class="noteBtn'+(nv?" has":"")+'" onclick="editNote(\''+esc(nk).replace(/'/g,"")+'\')" '+
+               'title="Комментарий">'+(nv?"\u270E":"+")+'</button>'+
            '</div>';
+        if(noteEdit===nk){
+          h+='<div class="noteEd">'+
+               '<textarea id="noteTa" placeholder="Комментарий: о чём договорились, когда написать, что учесть">'+
+                 esc(nv)+'</textarea>'+
+               '<div class="btns">'+
+                 (nv?'<button class="del" onclick="saveNote(\''+esc(nk).replace(/'/g,"")+'\',true)">\u00D7</button>':'')+
+                 '<button class="cancel" onclick="closeNote()">Отмена</button>'+
+                 '<button class="save" onclick="saveNote(\''+esc(nk).replace(/'/g,"")+'\')">Сохранить</button>'+
+               '</div></div>';
+        } else if(nv){
+          h+='<div class="rnNote" onclick="editNote(\''+esc(nk).replace(/'/g,"")+'\')">'+esc(nv)+'</div>';
+        }
+        h+='</div>';
       });
       h+='<div class="total"><span>'+(renewTab===2?"Уже предложено":"В этом списке")+'</span><b>'+money(lsum)+'</b></div>';
       if(renewTab!==2&&todo.length)
@@ -1365,7 +1276,14 @@ function render(){
        'разовые '+money(wait)+' + продления '+money(renewWeek)+'</div>'+
      '</div>';
 
-  h+='<h2>Приходы вне плана</h2><div class="card">';
+  var esumAll=extra.reduce(function(s,p){ return s+p.сумма; },0);
+  h+='<div class="h2row"><h2>Приходы вне плана</h2>'+
+       '<button onclick="toggleExtra()">'+(showExtra?"скрыть":"показать"+(extra.length?" "+extra.length:""))+'</button></div>';
+  if(!showExtra){
+    h+='<div class="card" style="padding:14px 16px"><div class="total" style="border-top:none;padding-top:0;margin-top:0">'+
+         '<span>Всего вне плана</span><b>'+money(esumAll)+'</b></div></div>';
+  } else {
+  h+='<div class="card">';
   if(!extra.length){
     h+='<div style="color:var(--faint);font-size:13.5px">Пока пусто. Новая запись клиента, продажа записи, что угодно \u2014 добавляй кнопкой внизу.</div>';
   } else {
@@ -1386,6 +1304,7 @@ function render(){
        '<button class="save" onclick="saveExtra()">Добавить</button></div></div>';
   }
   h+='</div>';
+  }
 
   var T=D.налог, tp=T.ближайший_платёж, gap=tp.оценка-(T.в_резерве_сейчас||0), td=daysTo(tp.дата);
   h+='<h2>Налог</h2><div class="card">'+
@@ -1437,6 +1356,21 @@ function payBill(id){
 function togglePaidRows(){ showPaid=!showPaid; render(); }
 function setWeek(i){ week=i; render(); }
 function setRenew(i){ renewTab=i; render(); }
+function noteKey(r){ return r.клиент+"|"+r.окно_с; }
+function editNote(k){
+  noteEdit=k; render();
+  setTimeout(function(){ var e=document.getElementById("noteTa");
+    if(e){ e.focus(); try{ e.selectionStart=e.value.length; }catch(x){}
+           e.scrollIntoView({behavior:"smooth",block:"center"}); } },60);
+}
+function closeNote(){ noteEdit=null; render(); }
+function saveNote(k,drop){
+  var e=document.getElementById("noteTa");
+  var v=drop?"":(e?e.value.trim():"");
+  if(v) S.notes[k]=v; else delete S.notes[k];
+  noteEdit=null; haptic(v?"ok":"");
+  saveState(); render();
+}
 function haptic(kind){
   try{ if(window.Telegram&&Telegram.WebApp&&Telegram.WebApp.HapticFeedback){
     if(kind==="ok") Telegram.WebApp.HapticFeedback.notificationOccurred("success");
@@ -1460,10 +1394,12 @@ function toggleOffer(client,win){
   saveState(); render();
 }
 function toggleRest(){ showRest=!showRest; render(); }
-function openForm(){ formOpen=true; render();
+function openForm(){ formOpen=true; if(!showExtra){ showExtra=true; saveState(); } render();
   setTimeout(function(){ var e=document.getElementById("fSrc");
     if(e){ e.focus(); e.scrollIntoView({behavior:"smooth",block:"center"}); } },60); }
 function closeForm(){ formOpen=false; render(); }
+function toggleExtra(){ showExtra=!showExtra; if(showExtra===false) formOpen=false;
+  haptic(); saveState(); render(); }
 function saveExtra(){
   var s=document.getElementById("fSrc").value.trim();
   var n=parseInt(document.getElementById("fSum").value.replace(/\D/g,""),10);
