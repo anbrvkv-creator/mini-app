@@ -148,6 +148,11 @@
            border-radius:8px;font-size:14px;line-height:1;font-family:inherit;cursor:pointer;
            display:flex;align-items:center;justify-content:center}
   .dropBtn:active{background:#3a2422;color:var(--coral)}
+  .grpHead{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);
+           padding:14px 0 4px;border-top:1px solid var(--stroke);margin-top:6px}
+  .grpHead:first-child{border-top:none;margin-top:0;padding-top:2px}
+  .grpHead b{color:var(--sky);font-weight:700;letter-spacing:0;text-transform:none;font-size:12.5px}
+  .rnItem.next .rn{opacity:.72}
   .dropLine{display:flex;justify-content:space-between;align-items:center;margin-top:11px;padding-top:10px;
             border-top:1px solid var(--stroke);font-size:12.5px;color:var(--faint)}
   .dropLine button{background:none;border:none;color:var(--sky);font-size:12.5px;font-family:inherit;
@@ -1272,7 +1277,12 @@ function render(){
   if(R.length){
     var todo=R.filter(function(r){ return !r.предложила; });
     var horizon=(D.прогноз_недели&&D.прогноз_недели[0])?D.прогноз_недели[0].по:null;
-    var TABS=[{t:"Ближайшие",f:function(r){ var dd=daysTo(r.окно_с); return !r.предложила && dd!==null && dd<=7; }},
+    var pend=R.filter(function(r){ return !r.предложила && !S.dropped[noteKey(r)]; });
+    var later=pend.filter(function(r){ return daysTo(r.окно_с)>7; })
+                  .map(function(r){ return r.окно_с; }).sort();
+    var nextBatch=later.length?later[0]:null;
+    var TABS=[{t:"Ближайшие",f:function(r){ var dd=daysTo(r.окно_с);
+                 return !r.предложила && dd!==null && (dd<=7 || r.окно_с===nextBatch); }},
               {t:"Все",f:function(r){ return !r.предложила; }},
               {t:"Готово",f:function(r){ return r.предложила; }}];
     var dropR=R.filter(function(r){ return S.dropped[noteKey(r)]; });
@@ -1290,8 +1300,17 @@ function render(){
     if(!listed.length){
       h+='<div style="color:var(--faint);font-size:13.5px">Пусто.</div>';
     } else {
+      var shownSoon=false, shownNext=false;
       listed.forEach(function(r){
         var d=daysTo(r.окно_с);
+        var isNext=(renewTab===0 && nextBatch && r.окно_с===nextBatch && d>7);
+        if(renewTab===0){
+          if(!isNext && !shownSoon){ shownSoon=true;
+            h+='<div class="grpHead">Ближайшие 7 дней</div>'; }
+          if(isNext && !shownNext){ shownNext=true;
+            var nb=nextBatch.split("-");
+            h+='<div class="grpHead">Следующая партия \u2014 <b>'+nb[2]+'.'+nb[1]+'</b></div>'; }
+        }
         var cls=r.предложила?"did":(r.счёт_выставлен?"bill":(d<0?"over":(d<=7?"soon":"")));
         var when = r.счёт_выставлен ? "счёт выставлен, не оплачен"
                  : d<0 ? ("счёт просрочен на "+Math.abs(d)+" дн.")
@@ -1300,7 +1319,7 @@ function render(){
                  : ("счёт через "+d+" дн.");
         var dd=r.окно_с.split("-"), ns=r.окно_по.split("-");
         var nk=noteKey(r), nv=S.notes[nk]||"";
-        h+='<div class="rnItem"><div class="rn '+cls+'">'+
+        h+='<div class="rnItem'+(isNext?" next":"")+'"><div class="rn '+cls+'">'+
              '<div class="box'+(r.предложила?" on":"")+'" onclick="toggleOffer(\''+
                esc(r.клиент).replace(/'/g,"")+'\',\''+r.окно_с+'\')">'+(r.предложила?"\u2713":"")+'</div>'+
              '<div class="nm"><b>'+esc(r.клиент)+'</b>'+
