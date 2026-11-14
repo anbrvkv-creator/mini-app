@@ -8,6 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <title>Финансы</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>try{var tw=window.Telegram&&Telegram.WebApp;if(tw){tw.setHeaderColor("#f6f0e4");tw.setBackgroundColor("#f6f0e4");}}catch(e){}</script>
 <style>
   :root{
     --bg:#0f1620; --card:#18212e; --card2:#1f2a3a; --stroke:#2a3648;
@@ -232,6 +233,86 @@
   .hint{font-size:12px;color:var(--faint);text-align:center;margin-top:24px;padding-bottom:6px}
   .err{text-align:center;padding:52px 24px;color:var(--dim)}
   .err b{display:block;color:var(--text);font-size:17px;margin-bottom:8px}
+  /* ——— Тема «пастель» (14.11.2026) ——— */
+  :root{
+    --bg:#f6f0e4; --card:#fffaf0; --card2:#efe6d3; --stroke:#e3d7bf;
+    --text:#1d1a15; --dim:#5f574a; --faint:#958a77;
+    --mint:#3d8a57; --mint2:#5aa673; --sun:#7a5cc8; --coral:#d24f7a; --sky:#6457d0;
+    --butter:#f7dc6f; --pink:#f6c4d5; --lilac:#cfcaf6; --sage:#c9e0bf; --ink:#1d1a15;
+  }
+  body{background:var(--bg);color:var(--text);
+       font-family:-apple-system,BlinkMacSystemFont,"SF Pro Rounded","SF Pro Text","Segoe UI",Roboto,sans-serif}
+  h2{color:var(--ink);font-size:19px;letter-spacing:-.01em;text-transform:none;font-weight:800;margin:28px 0 12px}
+  .h2row h2{font-size:19px}
+  .h2row button,.toggle,.undoBar button,.hidRow button,.dropLine button{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+  .card{background:var(--card);border:none;border-radius:26px;padding:18px;box-shadow:0 1px 0 rgba(0,0,0,.03)}
+
+  .hero{background:var(--butter);border:none;border-radius:30px;box-shadow:none;color:var(--ink)}
+  .hero:after{right:-40px;top:-50px;width:150px;height:150px;border-radius:38% 62% 55% 45%/50% 40% 60% 50%;
+              background:rgba(255,255,255,.35)}
+  .hero .kick{color:var(--ink);opacity:.7}
+  .hero .big{color:var(--ink);font-size:42px}
+  .hero .sub,.heroRow{color:#4d4433}
+  .heroRow b{color:var(--ink)}
+  .pct{color:var(--ink)}
+  .bar{background:rgba(29,26,21,.12);height:12px}
+  .bar>i{background:var(--ink);box-shadow:none}
+  .cheer{color:#3b3426;border-top-color:rgba(29,26,21,.12)}
+  .step{background:rgba(255,255,255,.45);border-radius:16px}
+  .step .m{color:#6b5f45}
+  .step.now{background:var(--ink);box-shadow:none;color:#fff}
+  .step.now .m{color:#d9d1bf}
+
+  .card.next{background:var(--pink);border-left:none}
+  .rnItem.next{background:none}
+  .card.next .t{color:var(--ink);opacity:.7}
+  .card.next .d,.card.next .note{color:#5a3f48}
+  .card.next .note,.upc{border-top-color:rgba(29,26,21,.12)}
+  .card.next .btn{background:var(--ink);color:#fff;border-radius:999px}
+
+  .loan{background:var(--card);border:none;border-radius:22px}
+  .loan:nth-of-type(4n+1){background:var(--lilac)}
+  .loan:nth-of-type(4n+2){background:var(--sage)}
+  .loan:nth-of-type(4n+3){background:#fbe7a6}
+  .loan:nth-of-type(4n+4){background:#f9d6e2}
+  .loan.off{background:transparent;border:1.5px dashed var(--stroke)}
+  .loanName .tick{color:var(--ink)}
+  .loanNote{color:#4f4739}
+  .lbar{background:rgba(29,26,21,.12)}
+  .chip{background:rgba(255,255,255,.6);border:none;color:var(--ink);font-weight:600}
+  .chip.sep{background:#f9cfdc;color:#9b2c52}
+  .chip.nov{background:#dcd8fb;color:#4a3fb4}
+  .chip.dec{background:#d4e9cc;color:#2e6b40}
+  .chip.warn{background:#fbe8a3;color:#7a5600}
+
+  .wk button,.seg button{background:var(--card);border:none;color:var(--dim);font-weight:600}
+  .wk button.on,.seg button.on{background:var(--ink);color:#fff}
+  .row,.rnItem,.fcItem,.hidRow,.total,.taxList,.grpHead,.dropLine{border-color:var(--stroke)}
+  .total b{color:var(--ink)}
+  .dotP{background:var(--mint)} .dotR{background:var(--sky)}
+  .taxDate{color:var(--coral)}
+
+  .add{background:linear-gradient(to top,var(--bg) 72%,transparent)}
+  .add button{background:var(--ink);color:#fff;border-radius:999px;box-shadow:0 10px 24px -14px rgba(0,0,0,.6)}
+  .form input,.fcEd textarea,.noteEd textarea,.memoEd textarea{background:#fff;border:1.5px solid var(--stroke);color:var(--ink);border-radius:16px}
+  .form .save,.fcEd .save,.noteEd .save{background:var(--ink);color:#fff;border-radius:999px}
+  .form .cancel,.fcEd .cancel,.noteEd .cancel{background:var(--card2);border:none;color:var(--ink);border-radius:999px}
+  .fcEd .del,.noteEd .del{border:none;border-radius:999px}
+  .closeBtn{background:var(--ink);border:none;color:#fff;border-radius:999px}
+  .closeBtn.undo{background:var(--card2);color:var(--dim)}
+  .hideBtn{background:var(--card2);border:none;color:var(--dim);border-radius:999px}
+  .hidBox{border:1.5px dashed var(--stroke);border-radius:22px}
+  .noteBtn,.dropBtn,.del{background:rgba(255,255,255,.7);color:var(--dim);border-radius:50%}
+  .noteBtn.has{background:var(--lilac);color:#4a3fb4}
+  .dropBtn:active,.del:active{background:var(--pink);color:#9b2c52}
+  .rn .box,.payBox{background:#fff;border:1.5px solid #cbbd9f;border-radius:50%;color:#fff}
+  .rn .box.on,.payBox.on{background:var(--ink);border-color:var(--ink)}
+  .rn.bill .box{border-color:var(--sun)}
+  .rnNote,.fcNote{color:#4a3fb4}
+  .grpHead b{color:var(--ink)}
+  .err b{color:var(--ink)}
+  .hero{margin-bottom:16px}
+  .card,.loan{margin-bottom:14px}
 </style>
 </head>
 <body>
@@ -1612,7 +1693,7 @@ function render(){
   h+='<h2>Налог</h2><div class="card">'+
        '<div class="taxHead"><div class="taxBig">'+money(tp.оценка)+'</div>'+
        '<div class="taxDate">'+(td>0?("через "+td+" дн."):"срок прошёл")+'</div></div>'+
-       '<div style="font-size:13px;color:var(--dim)">'+esc(tp.название)+' \u00B7 до 28 октября</div>'+
+       '<div style="font-size:13px;color:var(--dim)">'+esc(tp.название)+' \u00B7 до '+(function(s){var m=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];var p=String(s).split('-');return (+p[2])+' '+m[+p[1]-1];})(tp.дата)+'</div>'+
        '<div class="taxGap">В резерве '+money(T.в_резерве_сейчас||0)+
        ' \u00B7 не хватает <b style="color:var(--sun)">'+money(gap)+'</b>'+
        (td>0?(' \u00B7 по '+money(gap/td)+' в день'):'')+'</div><div class="taxList">';
